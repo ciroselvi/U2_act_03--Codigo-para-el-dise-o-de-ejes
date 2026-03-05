@@ -1,0 +1,42 @@
+# Esta zona solo son las ecuaciones utilizadas para todo lo demas  
+  
+kf = 1+q*(kt-1) # factor de concentracion de esfuerzo para flexion
+kfs = 1+qc*(kts-1) # factor de concentracion de esfuerzo para torsion
+  
+# esfuerzos noraml y cortante simultaneos en ejes
+ENa = kf*((32*Ma))/(mt.pi*(d**3))
+ENm = kf*((32*Mm))/(mt.pi*(d**3))
+ECa = kfs*((16*Ta))/(mt.pi*(d**3))
+ECm = kfs*((16*Tm))/(mt.pi*(d**3))
+
+# sigma_a: esfuerzo alternante medio de von Mises
+sigma_a = (( (32*kf*Ma/(mt.pi*d**3))**2 + 3*(16*kfs*Ta/(mt.pi*d**3))**2 )**0.5)
+# sigma_m: esfuerzo alternante máximo de von Mises
+sigma_m = (( (32*kf*Mm/(mt.pi*d**3))**2 + 3*(16*kfs*Tm/(mt.pi*d**3))**2 )**0.5)
+# sigma_max: esfuerzo máximo de von Mises
+sigma_max = (( (32*kf*(Mm+Ma)/(mt.pi*d**3))**2 + 3*(16*kfs*(Tm+Ta)/(mt.pi*d**3))**2 )**0.5)
+
+# --- Criterios de falla ---
+# Soderberg
+soderberg = sigma_a/Se + sigma_m/sy
+# Goodman modificado
+goodman_mod = sigma_a/Se + sigma_m/Sut
+# Gerber
+gerber = sigma_a/Se + (sigma_m/Sut)**2
+# ASME elíptica
+asme_elp = (sigma_a/Se)**2 + (sigma_m/sy)**2
+print('\n--- Criterios de falla ---')
+print(f'Soderberg: {soderberg:.4f} (debe ser <= 1/n)')
+print(f'Goodman modificado: {goodman_mod:.4f} (debe ser <= 1/n)')
+print(f'Gerber: {gerber:.4f} (debe ser <= 1/n)')
+print(f'ASME elíptica: {asme_elp:.4f} (debe ser <= 1)')
+
+n = (sy/sigma_max) # factor de diseño de von mises
+
+#Valores para la grafica
+Xc1_2 = r # Eje x de la grafica 1 y 2
+Y1= q # Eje y de la grafica 1
+Y2 = qc # Eje y de la grafica 2
+Xc3_4 = r/d # Eje x de la grafica 3 y 4
+Yc3 = kt # Eje y de la grafica 3
+Yc4 = kts # Eje y de la grafica 4
